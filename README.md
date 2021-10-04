@@ -34,11 +34,13 @@ Some key features of Matuzas' network:
 
 - The number of adaptive layers (input-weights-activation, not counting pooling, batchnorm and such) is **15**. There are skip connections, only 3x3 convolutions applied. Interestingly, no max-pooling, average-pooling instead!
 
-## A Note on the Best Classical (Non-Deep Network) Result
+## Best Classical (Non-ConvNet) Results
 
-**[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date and is unfair w.r.t. classics which got trully surpassed by convnets on MNIST only very recently, around 2018-2021.
+It is to be noted, for the sake of truth and for some future generations, that [Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date and is unfair w.r.t. classics which, I will claim here, got trully surpassed by convnets on MNIST only very recently, around 2018-2021.
 
-To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ a simple Gaussian kriging with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments so I will provide here some more details. Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented (code upon request), but this presents no problems on the machine with 64GB of RAM which I used to have in Lugano 2014!
+To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ a simple Gaussian kriging with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments so I will provide here some more details. 
+
+Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented (code upon request), but this presents no problems on the machine with 64GB of RAM which I used to have in Lugano 2014!
 
 The error rate is **0.29%** with some capacity to go down to **0.24%**. See also [this work][bknyaz], which corroborates the power of the Gabor wavelets with the achieved 0.30% error rate.
 
@@ -57,7 +59,7 @@ The biggest weakness of the classical models is that averaging or maxing-out var
 
 ## Advice for Someone New to Machine Learning
 
-Perfect is the enemy of good. This is the area of exponentially diminishing returns: Nothing works (improves the error) most of the time, do not base your business/study/action plan on the outliers, do not rush to improve those error rates. We might still witness another jump into the MNIST 0.10% error rate only after, say, another ten years, or this may never happen anymore.
+Perfect is the enemy of good. This is the area of super-exponentially diminishing returns: Nothing works (improves the error) most of the time, do not base your business/study/action plan on the outliers, do not rush to improve those error rates. We might still witness another jump into the MNIST 0.10% terra incognita only after, say, another ten years, or this may never happen anymore.
 
 It is incredible how GPUs and assembling of various very old ideas have changed the history, how experimental everything has become. Much of the machine learning theory before say 2010 is now obsolete and Rev. Mr. Thomas Bayes (or even E. T. Jaynes) may now rest in peace. Most of these learning theory works were starting with "let x be in Rn", forgetting to tell that this Rn is a crappy space and we will be drawing optimal decision boundaries on a trash can. So everything works in theory with nice Bayesian decision boundaries and images, and very little in practice. With convnets we are getting a good space instead of just any Rn, and in that space everything works, even overfitting.
 
