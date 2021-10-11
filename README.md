@@ -34,7 +34,7 @@ Some key features of Matuzas' network:
 
 - The number of adaptive layers (input-weights-activation, not counting pooling, batchnorm and such) is **15**. There are skip connections, only 3x3 convolutions applied. Interestingly, no max-pooling, average-pooling instead!
 
-## Best Classical (Non-ConvNet) Results
+## Best Classical Results
 
 It is to be noted, for the sake of truth and for some future generations, that [Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date and is unfair w.r.t. classics which, I will claim here, got trully surpassed by convnets on MNIST only very recently, around 2018-2021.
 
