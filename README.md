@@ -2,6 +2,9 @@
 You're gonna end up like a one-legged man in an ass-kicking contest.”<br>
 &ndash; Get Carter, 2000
 
+> “My career was based on cowardice.” <br>
+&ndash; Marvin Minsky, 2011
+
 > “Your business plan is based on outliers.” <br>
 &ndash; Brian Upton, GDC 2017
 
