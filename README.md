@@ -1,3 +1,10 @@
+> “Now if you want to do this little dance here for old times sake, Jack, bring it.<br>
+You're gonna end up like a one-legged man in an ass-kicking contest.”<br>
+&ndash; Get Carter, 2000
+
+> “Your business plan is based on outliers.” <br>
+&ndash; Brian Upton, GDC 2017
+
 ## Matuzas' Deep Network
 
 This is the fork of an excellent work by Jonas Matuzas who has created one of the best MNIST digit classifiers existing to date (world record error rate, simple network, fast training). Here I will add some details missing in the original repo.
@@ -80,7 +87,7 @@ The good however is also overrated and questionable. Linear algebra is cubic and
 [Adam Coates et al. 2010]: http://ai.stanford.edu/~acoates/papers/CoatesLeeNg_nips2010_dlwkshp_singlelayer.pdf
 [bknyaz]: https://github.com/bknyaz/gabors
 
-## Appendix: Python Setup, And All There Is to Machine Learning
+## Appendix: Python Setup; All There Is to Machine Learning
 
 I split the original Jupyter notebook file into two files: training (main.py) and prediction (save_predictions.py), and added the plotting file (plot_errors.py) which produces the figure above.
 
