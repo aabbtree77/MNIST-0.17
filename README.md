@@ -8,9 +8,11 @@ You're gonna end up like a one-legged man in an ass-kicking contest.”<br>
 > “Your business plan is based on outliers.” <br>
 &ndash; Brian Upton, GDC 2017
 
+> “Everything old is new again.”
+
 ## Matuzas' Deep Network
 
-This is the fork of an excellent work by Jonas Matuzas who has created one of the best MNIST digit classifiers existing to date (world record error rate, simple network, fast training). Here I will add some details missing in the original repo.
+This is a fork of an excellent work by Jonas Matuzas who has created one of the best MNIST digit classifiers existing to date (world record error rate, simple network, fast training). Here I will add some details missing in the original repo.
 
 Firstly, lets see the resulting errors (I average only three networks to save computing time, so the error is 0.18, not 0.17 - 0.16, first label is a true class, second - best prediction, third - secondary prediction):
 
@@ -38,7 +40,7 @@ This type of generative information comes from the writing process itself which 
 
 Some key features of Matuzas' network:
 
-- Invoking nvidia-smi shows that without the code running my GTX760 uses 384MiB/1998MiB of its VRAM, and with this code - 1866MiB/1998MiB, so it fits into 2GB VRAM. The batch size is only 32 though. 
+- Invoking nvidia-smi shows that without the code running my GTX 760 uses 384MiB/1998MiB of its VRAM, and with this code - 1866MiB/1998MiB, so it fits into 2GB VRAM. The batch size is only 32 though. 
 
 - A single network is trained in only about 1h20m on a desktop PC of 2015 (i7, 16GB of RAM, Ubuntu 20.04, GTX760). The number of epochs is extremely small, i.e. 20. A single prediction of the whole test set takes 13s.
 
@@ -46,7 +48,7 @@ Some key features of Matuzas' network:
 
 ## Best Classical Results
 
-It is to be noted, for the sake of truth and for some future generations, that [Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date and is unfair w.r.t. classics which, I will claim here, got trully surpassed by convnets on MNIST only very recently, around 2018-2021.
+[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date and is unfair w.r.t. classics which got trully surpassed by convnets on MNIST only very recently, around 2018-2021.
 
 To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ a simple Gaussian kriging with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments so I will provide here some more details. 
 
@@ -58,18 +60,18 @@ Multiple classifiers with input deformations may push the classical error down t
 
 There are simpler ways to achieve the error of **0.26%** (no shearing involved): 32+32+28bbwh26, 32+36+28bbwh26, 36+36+28bbwh16. 
 
-I would also note that the features of [Adam Coates et al. 2010][Adam Coates et al. 2010], i.e. the triangular encoding of patch distances, reach a solid "off the shelf" error **0.35%**. However, I have tried 50K, or even 100K filters (400K dimensional vectors), different parameter settings as well, but nothing led to anything better than 0.35%. By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
-conversion of distances to similarities (set sigma to the mean patch distance used in the triangular encoding), it is just that the former is more efficient and works when the feature dimension is large.
+The features of [Adam Coates et al. 2010][Adam Coates et al. 2010], i.e. the triangular encoding of patch distances, reach a solid "off the shelf" error **0.35%**. However, I have tried 50K, or even 100K filters (400K dimensional vectors), different parameter settings as well, but nothing led to anything better than 0.35%. By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
+conversion of distances to similarities (set sigma to the mean patch distance used in the triangular encoding). The former is more efficient and works when the feature dimension is large.
 
 For those curious about the CIFAR-10 data set, the kernel interpolator (kriging) produces the following performance values: 80.30% (4608 features), 84.64% (100K features), and 85.70% (400K features). Local patch contrast normalization is necessary, i.e. 81.52% performance without local contrast normalization (100K features). The performance value 85.70% is probably not the limit of this method, but it is too cumbersome to reach even this value.
 
-The case with 400K features (100K patch centroids) takes roughly 10K+10Ks. (twenty kilo-seconds!) of time for feature extraction, 54Ks. for the tiled Cholesky decomposition and linear solving, and about 12Ks. for testing. So this is very time-consuming on i7 with 16GB of RAM and GTX760, but there is a lot of opportunity for parallelizations, albeit pointless in light of convnets. By the way, float32 products might further speed up the codes when calculating the kernel entries, but the single precision is definitely not enough for the products inside the tiled Cholesky decomposition as the code barfs about nonpositive definite submatrices, this problem does not appear in the double precision. 
+The case with 400K features (100K patch centroids) takes roughly 10K+10Ks. (twenty kilo-seconds!) of time for feature extraction, 54Ks. for the tiled Cholesky decomposition and linear solving, and about 12Ks. for testing. So this is very time-consuming on i7 with 16GB of RAM and GTX 760, but there is a lot of opportunity for parallelizations, albeit pointless in light of convnets. By the way, float32 products might further speed up the codes when calculating the kernel entries, but the single precision is definitely not enough for the products inside the tiled Cholesky decomposition as the code barfs about nonpositive definite submatrices, this problem does not appear in the double precision. 
 
 The biggest weakness of the classical models is that averaging or maxing-out various models obtained on deformed data sets does not improve the error rate as dramatically as convnets do. I present here the exceptional cases, but in reality a simple averaging of such classifiers trained on various deformations does not improve **0.29%**. The error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a different case that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact. 
 
 Perfect is the enemy of good. This is the area of exponentially diminishing returns. However, there might still be plenty of better, more interesting uses of convnets, SGD, autograd and GPUs, perhaps in logic or 3D.
 
-The good however is also overrated and questionable. Linear algebra is cubic and demands float64. Ill-conditioned Hessians in Newton's method, similar headaches with kernel/covariance matrices in any Gaussian process modeling. Leo Breiman's trees were universal and elegant, inaccurate and recursive however.
+The good however is also overrated and questionable. Linear algebra is cubic and demands float64. Ill-conditioned Hessians in Newton's method, similar headaches with kernel/covariance matrices in any Gaussian process modeling. Leo Breiman's trees are elegant, but not accurate enough.
 
 ## References
 
@@ -90,9 +92,9 @@ The good however is also overrated and questionable. Linear algebra is cubic and
 [Adam Coates et al. 2010]: http://ai.stanford.edu/~acoates/papers/CoatesLeeNg_nips2010_dlwkshp_singlelayer.pdf
 [bknyaz]: https://github.com/bknyaz/gabors
 
-## Appendix: Python Setup; All There Is to Machine Learning
+## Appendix: Setting Up Keras
 
-I split the original Jupyter notebook file into two files: training (main.py) and prediction (save_predictions.py), and added the plotting file (plot_errors.py) which produces the figure above.
+I split the original Jupyter notebook file into two files: training (main.py) and prediction (save_predictions.py), and added the plotting file "plot_errors.py" which produces the figure above.
 
 Workflow:
 
