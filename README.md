@@ -2,14 +2,6 @@
 You're gonna end up like a one-legged man in an ass-kicking contest.”<br>
 &ndash; Get Carter, 2000
 
-> “My career was based on cowardice.” <br>
-&ndash; Marvin Minsky, 2011
-
-> “Your business plan is based on outliers.” <br>
-&ndash; Brian Upton, GDC 2017
-
-> “Everything old is new again.”
-
 ## Matuzas' Deep Network
 
 This is a fork of an excellent work by Jonas Matuzas who has created one of the best MNIST digit classifiers existing to date (world record error rate, simple network, fast training). Here I will add some details missing in the original repo.
@@ -50,7 +42,7 @@ Some key features of Matuzas' network:
 
 [Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date and is unfair w.r.t. classics which got trully surpassed by convnets on MNIST only very recently, around 2018-2021.
 
-To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ a simple Gaussian kriging with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments so I will provide here some more details. 
+To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ Gaussian kriging with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments so I will provide here some more details. 
 
 Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented (code upon request), but this presents no problems on the machine with 64GB of RAM which I used to have in Lugano 2014!
 
@@ -60,18 +52,38 @@ Multiple classifiers with input deformations may push the classical error down t
 
 There are simpler ways to achieve the error of **0.26%** (no shearing involved): 32+32+28bbwh26, 32+36+28bbwh26, 36+36+28bbwh16. 
 
-The features of [Adam Coates et al. 2010][Adam Coates et al. 2010], i.e. the triangular encoding of patch distances, reach a solid "off the shelf" error **0.35%**. However, I have tried 50K, or even 100K filters (400K dimensional vectors), different parameter settings as well, but nothing led to anything better than 0.35%. By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
+## The features of [Adam Coates et al. 2010][Adam Coates et al. 2010]
+
+The triangular encoding of patch distances reaches a solid "off the shelf" error **0.35%**. However, I have tried 50K, or even 100K filters (400K dimensional vectors), different parameter settings as well, but nothing led to anything better than 0.35%. By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
 conversion of distances to similarities (set sigma to the mean patch distance used in the triangular encoding). The former is more efficient and works when the feature dimension is large.
 
 For those curious about the CIFAR-10 data set, the kernel interpolator (kriging) produces the following performance values: 80.30% (4608 features), 84.64% (100K features), and 85.70% (400K features). Local patch contrast normalization is necessary, i.e. 81.52% performance without local contrast normalization (100K features). The performance value 85.70% is probably not the limit of this method, but it is too cumbersome to reach even this value.
 
 The case with 400K features (100K patch centroids) takes roughly 10K+10Ks. (twenty kilo-seconds!) of time for feature extraction, 54Ks. for the tiled Cholesky decomposition and linear solving, and about 12Ks. for testing. So this is very time-consuming on i7 with 16GB of RAM and GTX 760, but there is a lot of opportunity for parallelizations, albeit pointless in light of convnets. By the way, float32 products might further speed up the codes when calculating the kernel entries, but the single precision is definitely not enough for the products inside the tiled Cholesky decomposition as the code barfs about nonpositive definite submatrices, this problem does not appear in the double precision. 
 
-The biggest weakness of the classical models is that averaging or maxing-out various models obtained on deformed data sets does not improve the error rate as dramatically as convnets do. I present here the exceptional cases, but in reality a simple averaging of such classifiers trained on various deformations does not improve **0.29%**. The error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a different case that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact. 
+## Weaknesses of Classical Models 
 
-Perfect is the enemy of good. This is the area of exponentially diminishing returns. However, there might still be plenty of better, more interesting uses of convnets, SGD, autograd and GPUs, perhaps in logic or 3D.
+Convnets = SGD + autograd + GPU. Classics = everything else.
 
-The good however is also overrated and questionable. Linear algebra is cubic and demands float64. Ill-conditioned Hessians in Newton's method, similar headaches with kernel/covariance matrices in any Gaussian process modeling. Leo Breiman's trees are elegant, but not accurate enough.
+- Linear algebra is cubic and demands float64 or at very least float32. Ill-conditioned Hessians, kernel/covariance matrices... 
+
+- Leo Breiman's trees were very elegant, but not accurate enough even when they became forests.
+
+- Averaging or maxing-out classical models with tiny deformations does not improve the MNIST error rates as dramatically as convnets do. I wasted so much time to get this simple truth, even killed my SSD before its warranty time (by running the block Cholesky on 100K+ matrix sizes with 16GB RAM which demanded getting blocks back and forth from RAM to SSD). 
+
+- The classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact. Nobody understands these classical limits, but they do exist.
+
+## Some Obvious Final Remarks
+
+- Perfect is the enemy of good. This is the area of exponentially diminishing returns. Jonas Matuzas's network is an interesting outlier in the MNIST saga, nothing more, nothing less.
+
+- Better look for new applications such as 3D rather than focus on specific architectures and algorithms that could improve the error rates. The magic is likely in the terabyte data sets, not specific architectures. 
+
+- We no longer need hundreds of limited DIY models performing face recognition or autopilot. We only need one or two good ones, FOSS and continuously updated/pushed to the limits. Stockfish, Stable Diffusion...
+
+- The interesting is also getting very costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. At this point in time (January 2023) that means buying, say, RTX4080 with 12GB of RAM which costs, say, 800 USD, and that will get outdated in five years or even sooner as my experience with GTX760 shows.
+
+- "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
 
 ## References
 
