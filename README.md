@@ -4,7 +4,7 @@ You're gonna end up like a one-legged man in an ass-kicking contest.”<br>
 
 ## Matuzas' Deep Network
 
-This is a fork of a little known exceptional result by Jonas Matuzas who has created one of the best MNIST digit classifiers existing to date (world record error rate, simple network with reproducible fast training that fits into 2GB of VRAM).
+This is a fork of a little known exceptional report by [Jonas Matuzas](https://github.com/Matuzas77) who has created one of the best MNIST digit classifiers existing to date (world record error rate, small network, very fast reproducible training that fits into 2GB of VRAM).
 
 Here I will add some details missing in the original repo.
 
@@ -40,13 +40,17 @@ Some key features of Matuzas' network:
 
 - The number of adaptive layers (input-weights-activation, not counting pooling, batchnorm and such) is **15**. There are skip connections, only 3x3 convolutions applied. Interestingly, no max-pooling, average-pooling instead!
 
-## Best Classical Results
+## Current World Record (2023)
 
-[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date anymore and is also somewhat unfair w.r.t. classics which got trully surpassed by convnets on MNIST only very recently, around 2018-2021. A more up to date [state of the art](https://paperswithcode.com/sota/image-classification-on-mnist) indicates the absolute best MNIST digit recognition result - the error of **0.09%**! This score is not going to be easy to replicate as the world record holders indicate in their diligent experiments with the cnn error distributions. The value is likely to be final in the whole MNIST digit saga. Interestingly, they did not use pooling at all, achieving gradual feature reduction with convolutions without image padding. 
+[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date anymore and is also somewhat unfair w.r.t. classics, more on that below. A more up to date [state of the art](https://paperswithcode.com/sota/image-classification-on-mnist) indicates the absolute best MNIST digit recognition result - the error of **0.13%**, which is on par with **0.17%**. The first entry, that of **0.09%** is not a realizable network, it is the best observed result in a random combination of networks, there is no statistical criterion to single out such a combined network automatically from the training data alone. That paper by the Korean team is a very diligent work showing the error distributions obtained from about 90 networks with a practical result being 0.20% or 0.19%, depending on the network combination method (clf. Table 3 there).
 
-To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ Gaussian kriging with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments so I will provide here some more details. It is true that classics is no longer interesting, but certain systems are quite outstanding with their error rates, they deserve to be mentioned.
+We are at the stage of **0.17%** - **0.13%**. I have a hypothesis that someone will reach **0.09%** - **0.08%** in ten years, but this is also highly unlikely for two reasons. It is an absolute thermodynamic limit MNIST digit wise, and also the motivation to work on such a saturated and specific/useless goal is very low. It would be interesting to see those 8-9 misclassified images finally left and making into the MNIST Digit Hall of Fame, whether they would correspond to the ones selected above. The goal is hardly worth the effort. To formally close the MNIST digit saga, to let go of the past.
 
-Details: Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented (code upon request), but this presents no problems on the machine with 64GB of RAM which I used to have in Lugano 2014!
+## Revisiting the Classics  
+
+To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ Gaussian kriging (interpolation) with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments performed in the years 2014 - 2015, so I will provide here some more details. It is true that classics is no longer interesting in the context of big data, consider it as an example technical motivation for all the multilayer complexity that followed the Alexnet, circa post 2012.
+
+Here are the details: Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented, but this presents no problems on the machine with 64GB of RAM which I used to have in Lugano, 2014!
 
 The error rate is **0.29%** with some capacity to go down to **0.24%**. See also [this work][bknyaz], which corroborates the power of the Gabor wavelets with the achieved 0.30% error rate.
 
@@ -69,7 +73,7 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Linear algebra is cubic and demands float64 or at very least float32. Ill-conditioned Hessians, kernel/covariance matrices... 
 
-- Leo Breiman's trees were very elegant, but not accurate enough even when they became forests.
+- Leo Breiman's trees were very elegant, but not accurate enough even when compared to kriging/SVMs, even when they became forests.
 
 - Averaging or maxing-out classical models with tiny deformations does not improve the MNIST error rates. I wasted so much time to get this simple truth, even killed my SSD before its warranty time (by running the block Cholesky on 100K+ matrix sizes with 16GB RAM which demanded getting blocks back and forth from RAM to SSD). 
 
@@ -81,7 +85,7 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Better look for new applications such as 3D rather than pushing the error rates.
 
-- We no longer need hundreds of limited DIY models performing face recognition or autopilot. We only need a few good ones, FOSS and continuously updated/pushed to the limits. Stockfish, Stable Diffusion...
+- We no longer need hundreds of cnns competing in image recognition. We only need a few good ones, being FOSS and continuously updated/pushed to the limits. Stockfish, Stable Diffusion...
 
 - The interesting is also getting very costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. At this point in time (January 2023) that means buying, say, RTX4080 with 12GB of RAM.
 
