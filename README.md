@@ -60,12 +60,12 @@ There are simpler ways to achieve the error of **0.26%** (no shearing involved):
 
 ## The features of [Adam Coates et al. 2010][Adam Coates et al. 2010]
 
-The triangular encoding of patch distances reaches a solid "off the shelf" error **0.35%**. However, I have tried 50K, or even 100K filters (400K dimensional vectors), different parameter settings as well, but nothing led to anything better than 0.35%. By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
+Unlike log-Gabors that work only for black & white "stroke-based" images, the triangular encoding of patch distances is a universal set of discriminatory image features. The best of a kind circa 2010. It reaches a solid "off the shelf" MNIST digit error of **0.35%**. However, I have tried 50K, or even 100K filters (400K dimensional vectors), different parameter settings as well, but nothing led to anything better than 0.35%. By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
 conversion of distances to similarities (set sigma to the mean patch distance used in the triangular encoding). The former is more efficient and works when the feature dimension is large.
 
 For those curious about the CIFAR-10 data set, the kernel interpolator (kriging) produces the following performance values: 80.30% (4608 features), 84.64% (100K features), and 85.70% (400K features). Local patch contrast normalization is necessary, i.e. 81.52% performance without local contrast normalization (100K features). The performance value 85.70% is probably not the limit of this method, but it is too cumbersome to reach even this value.
 
-The case with 400K features (100K patch centroids) takes roughly 10K+10Ks. (twenty kilo-seconds!) of time for feature extraction, 54Ks. for the tiled Cholesky decomposition and linear solving, and about 12Ks. for testing. So this is very time-consuming on i7 with 16GB of RAM and GTX 760, but there is a lot of opportunity for parallelizations, albeit pointless in light of convnets. By the way, float32 products might further speed up the codes when calculating the kernel entries, but the single precision is definitely not enough for the products inside the tiled Cholesky decomposition as the code barfs about nonpositive definite submatrices, this problem does not appear in the double precision. 
+The case with 400K features (100K patch centroids) takes roughly 10K+10Ks. (twenty kilo-seconds!) of time for feature extraction, 54Ks. for tiled Cholesky decomposition and linear solving, and about 12Ks. for testing. So this is very time-consuming on i7 with 16GB of RAM and GTX760, but there is a lot of opportunity for parallelizations, albeit pointless in light of convnets (cnns). By the way, the float32 products might further speed up the codes when calculating the kernel entries, but single precision is definitely not enough for the products inside the tiled Cholesky decomposition as the code barfs about nonpositive definite submatrices, this problem does not appear in the double precision. 
 
 ## Weaknesses of Classical Models 
 
@@ -77,7 +77,9 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Averaging or maxing-out classical models with tiny deformations does not improve the MNIST error rates. I wasted so much time to get this simple truth, even killed my SSD before its warranty time (by running the block Cholesky on 100K+ matrix sizes with 16GB RAM which demanded getting blocks back and forth from RAM to SSD). 
 
-- The classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact.
+- The best classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact.
+
+- The best classical CIFAR-10 error rate is 85.70%, while convnets did surpass 99%, albeit only recently, in the year 2020.
 
 ## Notes to Myself in the Past (If I had the Time Machine...)
 
@@ -87,7 +89,7 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Python will win over Matlab, Scilab, Octave, Julia, R, Lua...
 
-- Interesting projects are github community efforts, not the arXiv papers: PyTorch, Leela Chess Zero, Stockfish, Stable Diffusion...
+- Interesting projects are github community efforts: PyTorch, Leela Chess Zero, Stockfish, Stable Diffusion...
 
 - The interesting is also getting very costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. In the year 2023 that means buying, say, RTX4080 with 12GB of RAM.
 
