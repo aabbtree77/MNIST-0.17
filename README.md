@@ -50,32 +50,40 @@ We are at the stage of **0.17%** - **0.13%**. I have a hypothesis that someone w
 
 To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ Gaussian kriging (interpolation) with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments performed in the years 2014 - 2015, so I will provide here some more details. It is true that classics is no longer interesting in the context of big data, consider it as the motivation for all the multilayer complexity that followed the Alexnet circa 2012.
 
-Here are the details: Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented, but this presents no problems on the machine with 64GB of RAM which I used to access in Lugano, 2014!
+Feature details: Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the 8x8 max-pooled log-Gabor image patch stage an input image needs to be split into x and y Sobel-filtered channels. 
+
+Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented, but this presents no problems on the machine with 64GB of RAM which I used to access in the research lab in Lugano already in 2014.
 
 The error rate is **0.29%** with some capacity to go down to **0.24%**. See also [this work][bknyaz], which corroborates the power of the Gabor wavelets with the achieved 0.30% error rate.
 
-Multiple classifiers with input deformations may push the classical error down to **0.24%**, but it is very hard to actually realize this. In particular, the following combination is notable: **5x36+1x28bbwh16+1x28shear40mp56**. This is a weighted sum (5:1:1) of the three classifiers, each classifier is trained on a separate deformed set of the MNIST training digits. Each training set consists of 60K deformed patterns obtained by applying the same deformation to every single original image. The first classifier resizes the images to 36x36, the second one resizes the digit's bounding box to 16x16, followed by the centering of the bounding box within a 28x28 matrix. The third classifier sees the images which are first x-sheared with a -0.40 factor, which results in 28x39 bitmaps. Each such bitmap is then truncated by five columns from the left and six columns from the right, resulting in a 28x28 matrix.
+Multiple classifiers with input deformations may push the classical error down to **0.24%**, but it is very hard to actually realize this. In particular, the following combination is notable: 
 
-There are simpler ways to achieve the error of **0.26%** (no shearing involved): 32+32+28bbwh26, 32+36+28bbwh26, 36+36+28bbwh16. 
+**5x36+1x28bbwh16+1x28shear40mp56**. 
+
+This is a weighted sum (5:1:1) of the three classifiers, each classifier is trained on a separate deformed set of the MNIST training digits. Each training set consists of 60K deformed patterns obtained by applying the same deformation to every single original image. The first classifier resizes the images to 36x36, the second one resizes the digit's bounding box to 16x16, followed by the centering of the bounding box within a 28x28 matrix. The third classifier sees the images which are first x-sheared with a -0.40 factor, which results in 28x39 bitmaps. Each such bitmap is then truncated by five columns from the left and six columns from the right, resulting in a 28x28 matrix.
+
+There are simpler ways to achieve the error of **0.26%** (no shearing involved): 32+32+28bbwh26, 32+36+28bbwh26, 36+36+28bbwh16. None of this is automatically realizable from the training set and statistical model selection alone.
 
 ## [Adam Coates et al. 2010][Adam Coates et al. 2010]
 
-Unlike log-Gabors that work only for black & white "stroke-based" images, the triangular encoding of patch distances is a universal set of discriminatory image features. The best of a kind circa 2010. It reaches a solid "off the shelf" MNIST digit error of **0.35%**. However, I have tried 50K, or even 100K filters (400K dimensional vectors), different parameter settings as well, but nothing led to anything better than 0.35%. By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
+Unlike the log-Gabors that work only for black & white "stroke-based" images, the triangular encoding of patch distances presents quite universal discriminatory image features. The best of a kind circa 2010. Kriging with such features reaches a solid "off the shelf" MNIST digit error of **0.35%**. I have tried 50K, or even 100K filters, i.e. 400K dimensional feature vectors (!), different parameter settings as well. Paradoxically, nothing led to anything better than 0.35%. 
+
+By the way, the triangular encoding can also be replaced with a more typical Gaussian kernel-based 
 conversion of distances to similarities (set sigma to the mean patch distance used in the triangular encoding). The former is more efficient and works when the feature dimension is large.
 
-For those curious about the CIFAR-10 data set, the kernel interpolator (kriging) produces the following performance values: 80.30% (4608 features), 84.64% (100K features), and 85.70% (400K features). Local patch contrast normalization is necessary, i.e. 81.52% performance without local contrast normalization (100K features). The performance value 85.70% is probably not the limit of this method, but it is too cumbersome to reach even this value. [Adam Coates et al. 2010][Adam Coates et al. 2010] report 79.6% value reached with 4K features.
+For those curious about where the classics really ends on the CIFAR-10 data set, the Gaussian kernel interpolator (kriging) produces the following performance values: 80.30% (4608 features), 84.64% (100K features), and 85.70% (400K features). Local patch contrast normalization is necessary, i.e. 81.52% performance without local contrast normalization (100K features). The performance value of 85.70% is probably not the limit of this method, but it is too cumbersome to reach even this. [Adam Coates et al. 2010][Adam Coates et al. 2010] report 79.6% reached with 4K features.
 
 The case with 400K features (100K patch centroids) takes roughly 10K+10Ks. (twenty kilo-seconds!) of time for feature extraction, 54Ks. for tiled Cholesky decomposition and linear solving, and about 12Ks. for testing. So this is very time-consuming on i7 with 16GB of RAM and GTX760, but there is a lot of opportunity for parallelizations, albeit pointless in light of convnets (cnns). By the way, the float32 products might further speed up the codes when calculating the kernel entries, but single precision is definitely not enough for the products inside the tiled Cholesky decomposition as the code barfs about nonpositive definite submatrices, this problem does not appear in the double precision. 
 
-## Weaknesses of Classical Models 
+## Classical Model Weaknesses
 
 Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Linear algebra is cubic and demands float64 or at very least float32. Ill-conditioned Hessians, kernel/covariance matrices... 
 
-- Leo Breiman's trees were very elegant, but not accurate enough even when compared to kriging/SVMs, even when they became forests.
+- Leo Breiman's trees were very elegant, but not accurate enough even when compared to kriging/SVMs, even after they became forests.
 
-- Averaging or maxing-out classical models with tiny deformations does not improve the MNIST error rates. I wasted so much time to get this simple truth, even killed my SSD before its warranty time (by running the block Cholesky on 100K+ matrix sizes with 16GB RAM which demanded getting blocks back and forth from RAM to SSD). 
+- Averaging or maxing-out classical models with tiny deformations does not improve the error rates. I wasted so much time to get this simple truth, even killed my SSD before its warranty time (by running the block Cholesky on 100K+ matrix sizes with 16GB RAM which demanded getting blocks back and forth from RAM to SSD). 
 
 - The best classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact.
 
@@ -85,15 +93,19 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - "Perfect is the enemy of good".
 
-- Better look for new applications such as 3D rather than pushing the error rates.
+- Better look for new domains such as 3D rather than error rates on arXiv.
 
 - Python will win over Matlab, Scilab, Octave, Julia, R, Lua...
 
-- Interesting projects are github community efforts: PyTorch, Leela Chess Zero, Stockfish, Stable Diffusion...
+- "I'd rather write code than papers" - Guido van Rossum
 
-- The interesting is also getting very costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. In the year 2023 that means buying, say, RTX4080 with 12GB of RAM.
+- Interesting projects are community efforts: PyTorch, Leela Chess Zero, Stockfish, Stable Diffusion...
+
+- The interesting is also getting costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. In the year 2023 that means buying an RTX4080 with 12GB of RAM. 
 
 - "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
+
+- None of this matters much. Think of a cloud cluster of RTX9080s in the year 2035 which will be a joke in 2050 and so on. 
 
 ## References
 
