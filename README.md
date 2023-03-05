@@ -4,9 +4,7 @@ You're gonna end up like a one-legged man in an ass-kicking contest.”<br>
 
 ## Matuzas' Deep Network
 
-This is a fork of a little known exceptional report by [Jonas Matuzas](https://github.com/Matuzas77) who has created one of the best MNIST digit classifiers existing to date (world record error rate, small network, very fast reproducible training that fits into 2GB of VRAM).
-
-Here I will add some details missing in the original repo.
+[Jonas Matuzas](https://github.com/Matuzas77) came up with an exceptional convolutional neural network (convnet, cnn) in the MNIST digit recognition. The result deserves to be better known: World record error rate, small network, very fast reproducible training that fits into 2GB of VRAM. In this fork I will add some details missing in the original repo.
 
 Firstly, lets see the resulting errors (I average only three networks to save computing time, so the error is 0.18, not 0.17 - 0.16, first label is a true class, second - best prediction, third - secondary prediction):
 
@@ -22,15 +20,17 @@ Firstly, lets see the resulting errors (I average only three networks to save co
 </table>
 
 
-Is the MNIST digit classification a solved problem? In the sense of the second allowed best prediction, yes, completely, no otherwise. Subjectively:
+Is the MNIST digit classification a solved problem? Subjectively:
 
 - Still recognizable: (3,5,3), (6,0,6), (7,1,7), (8,2,8), (9,7,9), (5,6,5), that would push 0.18% to 0.12%.
 - Harder perhaps: (6,1,6), (6,8,6), (2,7,2), (1,7,1), pushing it to 0.08%.
 - 4s vs 9s are hopeless.
 
-Notice how these deep networks do not develop a generative mechanism of handwriting the way humans do. A human can (with some stretch) see that it is the digit five, not six in the (5,6,5) example by noticing an angle in the turn of the upper stroke/bar which is some deformation of what is supposed to approach 90 degrees in some printed font variant. The fact that the lower part is wiggled randomly from a fast hand movement and now is closer to the digit six rather than five becomes irrelevant, but how would a machine know it. 
+Notice how these excellent discriminatory networks do not follow the nature of handwriting. A human can still see that it is the digit five, not six in the (5,6,5) example by noticing a mild lack of roundness in the upper left parts of the character. The extra wiggle on the lower left part indicates that the circular part of the character was written in a clock-wise direction which would be cumbersome/uneconomic to write in the case of a digit "6". 
 
-This type of generative information comes from the writing process itself which is hard to capture with affine deformations applied on image-only data (think of the UNIPEN handwriting data sets and those touchpads where such information is available).
+This type of generative deconstruction is possible with the UNIPEN handwriting data sets, but it is not captured by affine deformations applied on image bitmaps. An exceptional state of the art network still fails where it should not. It does not have a clue that a wiggle occurs due to the pen being lifted in the final moment of the writing of the digit. It would be atypical to create such a wiggle at the start of the writing. 
+
+The performance is outstanding, but this is not "AI". It lacks the very idea of the difference between "5" and "6". It does not get into the mindset of a detective :).
 
 Some key features of Matuzas' network:
 
@@ -42,9 +42,11 @@ Some key features of Matuzas' network:
 
 ## Current World Record (2023)
 
-[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date anymore and is also somewhat unfair w.r.t. classics, more on that below. A more up to date [state of the art](https://paperswithcode.com/sota/image-classification-on-mnist) indicates the absolute best MNIST digit recognition result - the error of **0.13%**, which is on par with **0.17%**. The first entry, that of **0.09%**, is not a realizable network, it is the best observed result in a random combination of networks, there is no statistical criterion to single out such a combined network automatically from the training data alone. That paper by the Korean team is a very diligent work showing the error distributions obtained from about 90 networks with a practical result being 0.20% or 0.19%, depending on the network combination method (clf. Table 3 there).
+[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date anymore and is also somewhat unfair w.r.t. classics, more on that below. A more up to date [state of the art](https://paperswithcode.com/sota/image-classification-on-mnist) indicates the error of **0.13%**, which is on par with **0.17%**. 
 
-We are at the stage of **0.17%** - **0.13%**. I have a hypothesis that someone will reach **0.09%** - **0.08%** in ten years, but this is also highly unlikely for two reasons. It is an absolute thermodynamic limit MNIST digit wise, and also the motivation to work on such a saturated and specific/useless goal is very low. It would be interesting to see those 8-9 misclassified images finally left and making into the MNIST Digit Hall of Fame, whether they would correspond to the ones selected above. The goal is hardly worth the effort. To formally close the MNIST digit saga, to let go of the past?
+The first entry in that impressive list, that of **0.09%**, is not a realizable network. It is the best observed result in a random combination of networks. There is no statistical criterion to single out such a combined network automatically from the training data alone. The report by the Korean team is a diligent work showing the error distributions obtained from about 90 networks with a practical result being 0.20% or 0.19%, depending on the network combination method (clf. Table 3 there).
+
+We are at the state of **0.17%** - **0.13%**. Someone could still reach **0.09%** - **0.08%** in, say, ten years, but this is also highly unlikely for two reasons. It is an absolute thermodynamic limit MNIST digit wise, and also the motivation to work on such a saturated and specific/useless goal is very low. It would still be interesting to see those 8-9 ultimate misclassified images, but the goal is hardly worth the pain. To formally close the MNIST digit saga, to let go of the past?
 
 ## Revisiting the Classics  
 
@@ -89,23 +91,15 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - The best classical CIFAR-10 error rate is 85.70%, while convnets did surpass 99%, albeit only recently, in the year 2020.
 
-## Notes to Myself in the Past (If I had the Time Machine...)
+## Further Notes
 
-- "Perfect is the enemy of good".
+- Some interesting ML projects are community efforts: PyTorch, Leela Chess Zero, Stable Diffusion...
 
-- Better look for new domains such as 3D rather than error rates on arXiv.
-
-- Python will win over Matlab, Scilab, Octave, Julia, R, Lua...
-
-- "I'd rather write code than papers" - Guido van Rossum
-
-- Interesting projects are community efforts: PyTorch, Leela Chess Zero, Stockfish, Stable Diffusion...
-
-- The interesting is also getting costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. In the year 2023 that means buying an RTX4080 with 12GB of RAM. 
+- The interesting is also getting costly. Stable Diffusion demands at least 6-10GB of VRAM, better a lot more. In the year 2023 that means buying an RTX4080 with 12GB of RAM. 
 
 - "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
 
-- None of this matters much. Think of a cloud cluster of RTX9080s in the year 2035 which will be a joke in 2050 and so on. 
+- [In the year 2525, if man is still alive...](https://www.youtube.com/watch?v=zKQfxi8V5FA)
 
 ## References
 
