@@ -42,15 +42,15 @@ Some key features of Matuzas' network:
 
 ## Current World Record (2023)
 
-[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date anymore and is also somewhat unfair w.r.t. classics, more on that below. A more up to date [state of the art](https://paperswithcode.com/sota/image-classification-on-mnist) indicates the absolute best MNIST digit recognition result - the error of **0.13%**, which is on par with **0.17%**. The first entry, that of **0.09%** is not a realizable network, it is the best observed result in a random combination of networks, there is no statistical criterion to single out such a combined network automatically from the training data alone. That paper by the Korean team is a very diligent work showing the error distributions obtained from about 90 networks with a practical result being 0.20% or 0.19%, depending on the network combination method (clf. Table 3 there).
+[Rodrigo Benenson's list](https://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html) is not up to date anymore and is also somewhat unfair w.r.t. classics, more on that below. A more up to date [state of the art](https://paperswithcode.com/sota/image-classification-on-mnist) indicates the absolute best MNIST digit recognition result - the error of **0.13%**, which is on par with **0.17%**. The first entry, that of **0.09%**, is not a realizable network, it is the best observed result in a random combination of networks, there is no statistical criterion to single out such a combined network automatically from the training data alone. That paper by the Korean team is a very diligent work showing the error distributions obtained from about 90 networks with a practical result being 0.20% or 0.19%, depending on the network combination method (clf. Table 3 there).
 
-We are at the stage of **0.17%** - **0.13%**. I have a hypothesis that someone will reach **0.09%** - **0.08%** in ten years, but this is also highly unlikely for two reasons. It is an absolute thermodynamic limit MNIST digit wise, and also the motivation to work on such a saturated and specific/useless goal is very low. It would be interesting to see those 8-9 misclassified images finally left and making into the MNIST Digit Hall of Fame, whether they would correspond to the ones selected above. The goal is hardly worth the effort. To formally close the MNIST digit saga, to let go of the past.
+We are at the stage of **0.17%** - **0.13%**. I have a hypothesis that someone will reach **0.09%** - **0.08%** in ten years, but this is also highly unlikely for two reasons. It is an absolute thermodynamic limit MNIST digit wise, and also the motivation to work on such a saturated and specific/useless goal is very low. It would be interesting to see those 8-9 misclassified images finally left and making into the MNIST Digit Hall of Fame, whether they would correspond to the ones selected above. The goal is hardly worth the effort. To formally close the MNIST digit saga, to let go of the past?
 
 ## Revisiting the Classics  
 
-To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ Gaussian kriging (interpolation) with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments performed in the years 2014 - 2015, so I will provide here some more details. It is true that classics is no longer interesting in the context of big data, consider it as an example technical motivation for all the multilayer complexity that followed the Alexnet, circa post 2012.
+To my knowledge, the best classical (non-deep learning) system for the MNIST digit recognition is to employ Gaussian kriging (interpolation) with max-pooled log-Gabor filters of [Peter Kovesi][Peter Kovesi]. These are my own experiments performed in the years 2014 - 2015, so I will provide here some more details. It is true that classics is no longer interesting in the context of big data, consider it as an example technical motivation for all the multilayer complexity that followed the Alexnet circa 2012.
 
-Here are the details: Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented, but this presents no problems on the machine with 64GB of RAM which I used to have in Lugano, 2014!
+Here are the details: Kovesi's filters must be with the default parameters tuned for image reconstruction, not discrimination. Attempts to find better parameters lead to a dead end. Prior to the max-pooled log-Gabor stage an input image needs to be split into x and y Sobel-filtered channels. Kriging details: Gaussian kernel interpolator whose sigma is set to the mean distance between the input patterns. **No hyperparameters**. As the kernel matrix is too big to fit into 16 GB RAM, the [tiled Cholesky decomposition][tiled Cholesky] needs to be implemented, but this presents no problems on the machine with 64GB of RAM which I used to access in Lugano, 2014!
 
 The error rate is **0.29%** with some capacity to go down to **0.24%**. See also [this work][bknyaz], which corroborates the power of the Gabor wavelets with the achieved 0.30% error rate.
 
@@ -77,17 +77,19 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Averaging or maxing-out classical models with tiny deformations does not improve the MNIST error rates. I wasted so much time to get this simple truth, even killed my SSD before its warranty time (by running the block Cholesky on 100K+ matrix sizes with 16GB RAM which demanded getting blocks back and forth from RAM to SSD). 
 
-- The classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact. Nobody understands these classical limits, but they do exist.
+- The classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact.
 
-## Some Further Remarks
+## Notes to Myself in the Past (If I had the Time Machine...)
 
 - "Perfect is the enemy of good".
 
 - Better look for new applications such as 3D rather than pushing the error rates.
 
-- We no longer need hundreds of cnns competing in image recognition. We only need a few good ones, being FOSS and continuously updated/pushed to the limits. Stockfish, Stable Diffusion...
+- Python will win over Matlab, Scilab, Octave, Julia, R, Lua...
 
-- The interesting is also getting very costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. At this point in time (January 2023) that means buying, say, RTX4080 with 12GB of RAM.
+- Interesting projects are github community efforts, not the arXiv papers: PyTorch, Leela Chess Zero, Stockfish, Stable Diffusion...
+
+- The interesting is also getting very costly. To only generate Stable Diffusion images one needs at least 6-10GB of VRAM, better a lot more. In the year 2023 that means buying, say, RTX4080 with 12GB of RAM.
 
 - "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
 
