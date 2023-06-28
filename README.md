@@ -89,15 +89,15 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - The best classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact.
 
-- The best classical CIFAR-10 error rate is 85.70%, while convnets did surpass 99%, albeit only recently, in the year 2020.
+- The best classical CIFAR-10 error rate is 85.70% (my personal experiments of kriging the features of Adam Coates et al. 2010). Convnets did surpass [99% around the year 2020](https://paperswithcode.com/sota/image-classification-on-cifar-10).
 
 ## Further Notes
 
-- Some interesting ML projects are community efforts: PyTorch, Leela Chess Zero, Stable Diffusion...
+- The most interesting ML projects are community efforts now: PyTorch, Leela Chess Zero, [Stable Diffusion](https://lambdalabs.com/blog/inference-benchmark-stable-diffusion)...
 
-- The interesting is also getting costly. Stable Diffusion demands at least 6-10GB of VRAM, better a lot more. In the year 2023 that means buying an RTX4080 with 12GB of RAM. 
+- Training becomes very costly. "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
 
-- "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
+- "Chinese publication Jitwei revealed that ByteDance has already ordered around [$1 billion worth of Nvidia GPUs in 2023 so far](https://www.tomshardware.com/news/chinas-bytedance-has-gobbled-up-dollar1-billion-of-nvidia-gpus-for-ai-this-year)..."
 
 - [In the year 2525, if man is still alive...](https://www.youtube.com/watch?v=zKQfxi8V5FA)
 
