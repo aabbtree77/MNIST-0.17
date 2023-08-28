@@ -77,7 +77,7 @@ For those curious about where the classics really ends on the CIFAR-10 data set,
 
 The case with 400K features (100K patch centroids) takes roughly 10K+10Ks. (twenty kilo-seconds!) of time for feature extraction, 54Ks. for tiled Cholesky decomposition and linear solving, and about 12Ks. for testing. So this is very time-consuming on i7 with 16GB of RAM and GTX760, but there is a lot of opportunity for parallelizations, albeit pointless in light of convnets (cnns). By the way, the float32 products might further speed up the codes when calculating the kernel entries, but single precision is definitely not enough for the products inside the tiled Cholesky decomposition as the code barfs about nonpositive definite submatrices, this problem does not appear in the double precision. 
 
-## Classical Model Weaknesses
+## Classical ML Weaknesses
 
 Convnets = SGD + autograd + GPU. Classics = everything else.
 
@@ -97,7 +97,9 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Shazam/Mousai, the apps that recognize, say, 10M songs, rely on classical indexing, i.e. spectrograms and hashing.
 
-- One can design a weed-cutting robot with a full blown GPU-based computer vision system, SLAM, cloud training and all that. However, a dramatically cheaper solution may involve just a random walking robot with simple 5$ ultrasonic distance sensors that sense a wire obstacle built manually around each plant.
+- One can design a weed-cutting robot with a full blown GPU-based computer vision system, SLAM, cloud training and all that. However, a dramatically cheaper solution may involve just a random walking robot with simple 5$ ultrasonic distance sensors that sense wire obstacles built manually around each plant.
+
+- A film critic can connect [Jeanne Dielman, 23, quai du commerce, 1080 Bruxelles](https://www.imdb.com/title/tt0073198/) to [Dillinger Is Dead](https://www.imdb.com/title/tt0062893/), but the imdb algorithms, after all the decades of research and competition, cannot.
 
 - The most interesting ML projects are community efforts: PyTorch, Leela Chess Zero, [Stable Diffusion](https://lambdalabs.com/blog/inference-benchmark-stable-diffusion)...
 
