@@ -87,17 +87,25 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Averaging or maxing-out classical models with tiny deformations does not improve the error rates. I wasted so much time to get this simple truth, even killed my SSD before its warranty time (by running the block Cholesky on 100K+ matrix sizes with 16GB RAM which demanded getting blocks back and forth from RAM to SSD). 
 
-- The best classical MNIST error rate of 0.30%-0.29% should not be hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact.
+- The best classical MNIST error rate of 0.30%-0.29% should not be too hard to replicate, but 0.24% is already a practically unreachable outlier that may involve undocumented hidden factors such as Matlab's interpolation type during the shearing of images and even image dithering may have an impact.
 
 - The best classical CIFAR-10 error rate is 85.70% (my personal experiments of kriging the features of Adam Coates et al. 2010). Convnets did surpass [99% around the year 2020](https://paperswithcode.com/sota/image-classification-on-cifar-10).
 
 ## Further Notes
 
-- The most interesting ML projects are community efforts now: PyTorch, Leela Chess Zero, [Stable Diffusion](https://lambdalabs.com/blog/inference-benchmark-stable-diffusion)...
+- A lot of simple-looking problems are hard to automate, paradoxically. Consider 3D: Seamless mesh texturing is harder than producing a convincing 2D image that imitates van Gogh. Tedious manual n-gon removal/retopology is still needed in order not to destroy 3D meshes with tools such Bevel in Blender. Virtually every single object in any 3D game is still a manually drawn and textured mesh. Moreover, due to proprietary nature, newcomer teams must redraw the same things over and over again.
+
+- Shazam/Mousai, the apps that recognize, say, 10M songs, rely on classical indexing, i.e. spectrograms and hashing.
+
+- One can design a weed-cutting robot with a full blown GPU-based computer vision system, SLAM, cloud training and all that. However, a dramatically cheaper solution may involve just a random walking robot with simple 5$ ultrasonic distance sensors that sense a wire obstacle built manually around each plant.
+
+- The most interesting ML projects are community efforts: PyTorch, Leela Chess Zero, [Stable Diffusion](https://lambdalabs.com/blog/inference-benchmark-stable-diffusion)...
 
 - Training becomes very costly. "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
 
 - "Chinese publication Jitwei revealed that ByteDance has already ordered around [$1 billion worth of Nvidia GPUs in 2023 so far](https://www.tomshardware.com/news/chinas-bytedance-has-gobbled-up-dollar1-billion-of-nvidia-gpus-for-ai-this-year)..."
+
+- New directions emerge in model adaptation without retraining the original big network, such as [Textual Inversion](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Textual-Inversion?ref=404media.co) and the CivitAI platform where users share and further iterate their specific text-to-image models. [Everything and everyone is for sale](https://www.404media.co/inside-the-ai-porn-marketplace-where-everything-and-everyone-is-for-sale/).
 
 - [In the year 2525, if man is still alive...](https://www.youtube.com/watch?v=zKQfxi8V5FA)
 
