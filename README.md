@@ -109,6 +109,8 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - New directions emerge in model adaptation without retraining the original big network, such as [Textual Inversion](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Textual-Inversion?ref=404media.co) and the CivitAI platform where users share and further iterate their specific text-to-image models. [Everything and everyone is for sale](https://www.404media.co/inside-the-ai-porn-marketplace-where-everything-and-everyone-is-for-sale/).
 
+- [Alexander Skidanov](https://www.youtube.com/watch?v=1aK2u_fdiIY) and [Igor Ganichev](https://www.youtube.com/watch?v=-xh_XXlX0kE&t=8977s) mention their failures to teach deep networks mathematics and logical reasoning. Doron Zeilberger: ["All human proofs are shallow"](https://sites.math.rutgers.edu/~zeilberg/OPINIONS.html).
+
 - [In the year 2525, if man is still alive...](https://www.youtube.com/watch?v=zKQfxi8V5FA)
 
 ## References
