@@ -105,11 +105,19 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
 - Training becomes very costly. "According to Mostaque, the Stable Diffusion team used a cloud cluster with 256 Nvidia A100 GPUs for training. This required about 150,000 hours, which Mostaque says equates to a market price of about $600,000."
 
-- "Chinese publication Jitwei revealed that ByteDance has already ordered around [$1 billion worth of Nvidia GPUs in 2023 so far](https://www.tomshardware.com/news/chinas-bytedance-has-gobbled-up-dollar1-billion-of-nvidia-gpus-for-ai-this-year)..."
+- "Chinese publication Jitwei revealed that ByteDance has already ordered around [$1 billion worth of Nvidia GPUs in 2023 so far](https://www.tomshardware.com/news/chinas-bytedance-has-gobbled-up-dollar1-billion-of-nvidia-gpus-for-ai-this-year)."
 
 - New directions emerge in model adaptation without retraining the original big network, such as [Textual Inversion](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Textual-Inversion?ref=404media.co) and the CivitAI platform where users share and further iterate their specific text-to-image models. [Everything and everyone is for sale](https://www.404media.co/inside-the-ai-porn-marketplace-where-everything-and-everyone-is-for-sale/).
 
 - [Alexander Skidanov](https://www.youtube.com/watch?v=1aK2u_fdiIY) and [Igor Ganichev](https://www.youtube.com/watch?v=-xh_XXlX0kE&t=8977s) mention their failures to teach deep networks mathematics and logical reasoning. Doron Zeilberger: ["All human proofs are shallow"](https://sites.math.rutgers.edu/~zeilberg/OPINIONS.html).
+
+- Despite the AlphaZero and Lc0 revolution in chess, a classical chess engine called Stockfish still leads the game, see the marvelous [TCEC competitions](https://en.wikipedia.org/wiki/Top_Chess_Engine_Championship). Stockfish does use neural networks, but only to speed up its classical eval with a neural network approximation (NNUE), there is no reinforcement loop as in the Lc0, at least not yet (2023-2024). 
+
+  Stockfish node counts and depth values are classical (typically hundreds of millions of nodes with say 30 moves ahead, compared to say only hundreds of thousands of nodes and 10 moves ahead by Lc0). This shows something about chess: the one with a simpler eval who goes deeper still beats the one who better "understands" chess. 
+  
+  So we have an amazing self-learning reaching the top level, but its actual impact in chess is still rather minor ten years later. Lc0 is a lower rated engine that demands a lot more GPU power than Stockfish.
+  
+- All sorts of robot shows where they self-learn salto mortale or snowboarding, but its still you and me working in the construction sites and destroying our spinal cords, or shooting in the trenches each other on the front line. Robots are very expensive, humans are not: [Бабы новых нарожают](https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D0%B1%D1%8B_%D0%BD%D0%BE%D0%B2%D1%8B%D1%85_%D0%BD%D0%B0%D1%80%D0%BE%D0%B6%D0%B0%D1%8E%D1%82).
 
 - [In the year 2525, if man is still alive...](https://www.youtube.com/watch?v=zKQfxi8V5FA)
 
