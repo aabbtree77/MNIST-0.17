@@ -115,9 +115,9 @@ Convnets = SGD + autograd + GPU. Classics = everything else.
 
   Stockfish node counts and depth values are classical (typically hundreds of millions of nodes with say 30 moves ahead, compared to say only hundreds of thousands of nodes and 10 moves ahead by Lc0). This shows something about chess: the one with a simpler eval who goes deeper still beats the one who better "understands" chess. 
   
-  So we have an amazing self-learning reaching the top level, but its actual impact in chess is still rather minor ten years later. Lc0 is a lower rated engine that demands a lot more GPU power than Stockfish.
+  So we have an amazing self-learning reaching the top level, but its actual impact in chess is still rather minor ten years later. Lc0 is a lower rated engine that demands a lot more GPU power than Stockfish right now. I would still bet on Lc0 in a long run.
   
-- All sorts of robot shows where they self-learn salto mortale or snowboarding, but its still you and me working in the construction sites and destroying our spinal cords, or shooting in the trenches each other on the front line. Robots are very expensive, humans are not: [Бабы новых нарожают](https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D0%B1%D1%8B_%D0%BD%D0%BE%D0%B2%D1%8B%D1%85_%D0%BD%D0%B0%D1%80%D0%BE%D0%B6%D0%B0%D1%8E%D1%82).
+- We get all sorts of useless robot shows where they self-learn salto mortale or snowboarding, but it is still you and me working in the construction sites and destroying our spinal cords, or shooting in the trenches each other on the front line. Robots are very expensive, humans are not: [Бабы новых нарожают](https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D0%B1%D1%8B_%D0%BD%D0%BE%D0%B2%D1%8B%D1%85_%D0%BD%D0%B0%D1%80%D0%BE%D0%B6%D0%B0%D1%8E%D1%82).
 
 - [In the year 2525, if man is still alive...](https://www.youtube.com/watch?v=zKQfxi8V5FA)
 
